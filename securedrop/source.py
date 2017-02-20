@@ -246,7 +246,7 @@ def submit():
 
     # Don't bother submitting anything if it was an "empty" submission. #878.
     if not (msg or fh):
-        flash("You must enter a message or choose a file to submit.", "error")
+        flash("Keine Nachricht oder Datei zum Absenden vorhanden.", "error")
         return redirect(url_for('lookup'))
 
     fnames = []
@@ -263,13 +263,13 @@ def submit():
                       journalist_filename, fh.filename, fh.stream))
 
     if first_submission:
-        flash("Thanks for submitting something to SecureDrop! Please check back later for replies.",
+        flash("Vielen Dank für Ihre Nachricht! Bitte geben Sie uns etwas Zeit, das Material zu sichten und schauen Sie später noch mal rein, um etwaige Antworten zu lesen.",
               "notification")
     else:
         if msg:
-            flash("Thanks! We received your message.", "notification")
+            flash("Danke! Wir haben Ihre Nachricht erhalten.", "notification")
         if fh:
-            flash('{} "{}".'.format("Thanks! We received your document",
+            flash('{} "{}".'.format("Danke! Wir haben Ihre Dokumente erhalten.",
                                     fh.filename or '[unnamed]'), "notification")
 
     for fname in fnames:
@@ -300,7 +300,7 @@ def delete():
     db_session.delete(reply)
     db_session.commit()
 
-    flash("Reply deleted", "notification")
+    flash("Antwort gelöscht", "notification")
     return redirect(url_for('lookup'))
 
 
@@ -333,7 +333,7 @@ def login():
         else:
             app.logger.info(
                     "Login failed for invalid codename".format(codename))
-            flash("Sorry, that is not a recognized codename.", "error")
+            flash("Das ist kein gültiger Geheimcode.", "error")
     return render_template('login.html')
 
 
