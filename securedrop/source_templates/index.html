@@ -2,20 +2,26 @@
 <html>
   <head>
     <title>Der heise Tippgeber | Der sichere Briefkasten</title>
-    <link rel="stylesheet" href="/static/css/normalize.css" type="text/css" media="all" />
-    <link rel="stylesheet" href="/static/css/source.css" type="text/css" media="all" />
-    <link rel="stylesheet" href="/static/css/font-awesome.css" type="text/css" media="all" />
-    <link rel="icon" type="image/png" href="/static/i/favicon.png">
-    <script type="text/javascript" src="/static/js/libs/jquery-2.1.1.min.js"></script>
-    <script type="text/javascript" src="/static/js/source.js"></script>
+
+    <link rel="stylesheet" href="/static/css/source.css" />
+    <link rel="icon" type="image/png" href="/static/i/favicon.png" >
+
+    {% assets filters="jsmin", output="gen/source.js",
+      "js/libs/jquery-2.1.4.min.js", "js/source.js" %}
+      <script src="{{ ASSET_URL }}"></script>
+    {% endassets %}
   </head>
   <body>
+    <div class="js-warning warning"><strong>We recommend turning the Security Slider to High to protect your anonymity:</strong> <a id="disable-js" href="">Learn how to set it to high</a>, or ignore this warning to continue. <img id="js-warning-close" src="{{ url_for('static', filename='i/font-awesome/times-white.png') }}" width="12px" height="12px"></div>
+    <div class="use-tor-browser warning"><strong>We recommend using Tor Browser to access SecureDrop:</strong> <a id="recommend-tor" href="{{ url_for('recommend_tor_browser') }}">Learn how to install it</a>, or ignore this warning to continue. <img id="use-tor-browser-close" src="{{ url_for('static', filename='i/font-awesome/times-white.png') }}" width="12px" height="12px"></div>
+
+    {% include 'banner_warning_flashed.html' %}
 
     <div class="content">
       <div class="grid">
-	{% include 'flashed.html' %}
+        {% include 'flashed.html' %}
         <div id="header">
-          <img src="/static/i/{{ header_image }}" class="logo grid-item" alt="heise Tippgeber">
+          <img src="/static/i/{{ header_image }}" class="logo grid-item" alt="heise Tippgeber" width="250px">
           {% if use_custom_header_image %}
           <div class="powered">
             Powered by<br/>
@@ -25,27 +31,27 @@
         </div>
 
         <div class="grid-item option alt">
-          <h2>
+          <h2 class="welcome-text">
             Werfen Sie etwas in unseren sicheren Briefkasten ein
           </h2>
           <hr class="cut-out" />
           <p>Wenn Sie den sicheren Briefkasten zum ersten Mal benutzen, bitte hier anfangen.</p>
-          <a href="/generate" class="btn alt block" id="submit-documents-button">
-            <img class="icon off-hover" src="{{ url_for('static', filename='i/font-awesome/cloud-upload-white.png') }}" width="20px" />
-            <img class="icon on-hover" src="{{ url_for('static', filename='i/font-awesome/cloud-upload-blue.png') }}" width="20px" />
-            Hochladen
+          <a href="/generate" class="sd-button btn alt index" id="submit-documents-button">
+            <img class="icon off-hover" src="{{ url_for('static', filename='i/font-awesome/cloud-upload-white.png') }}" width="20px" height="14px" />
+            <img class="icon on-hover" src="{{ url_for('static', filename='i/font-awesome/cloud-upload-blue.png') }}" width="20px" height="14px" />
+            HOCHLADEN
           </a>
         </div>
         <div class="grid-item option">
-          <h2>
+          <h2 class="welcome-text">
             Haben Sie bereits einen Geheimcode?
           </h2>
           <hr class="cut-out" />
           <p>Wenn Sie uns schon Dokumente übermittelt haben, bitte hier anmelden, um Antworten zu lesen.</p>
-          <a href="/login" class="btn block">
-            <img class="icon off-hover" src="{{ url_for('static', filename='i/font-awesome/comments-white.png') }}" width="20px" />
-            <img class="icon on-hover" src="{{ url_for('static', filename='i/font-awesome/comments-blue.png') }}" width="20px" />
-            Antworten
+          <a href="/login" id="login-button" class="sd-button btn primary index">
+            <img class="icon off-hover" src="{{ url_for('static', filename='i/font-awesome/comments-white.png') }}" width="20px" height="16px" />
+            <img class="icon on-hover" src="{{ url_for('static', filename='i/font-awesome/comments-blue.png') }}" width="20px" height="16px" />
+            ANTWORTEN LESEN
           </a>
         </div>
       </div>
@@ -54,5 +60,13 @@
         Powered by SecureDrop {{ version }}.
       </footer>
     </div>
+
+    <!-- Warning bubble to help TB users disable Javascript with NoScript.
+    Included here so the images can preload while the user is first
+    reading the page. Hidden by default. -->
+    <div class="bubble" id="security-slider-info-bubble">
+      
+    </div>
+
   </body>
 </html>

@@ -3,31 +3,46 @@
 
 <div class="center">
 
-  <h2 class="headline">Schicken Sie uns eine Nachricht, eine Datei oder beides</h2>
+  {% if flagged and not haskey %}
+    <div class="flash notification">
+      <img src="{{ url_for('static', filename='i/relieved_face.png')  }}" alt="relieved-face" class="icon">
+      <div class="message">
+        <strong>Bitte entschuldigen Sie die Unannehmlichkeiten...</strong></br>
+        <p>Bei Ihrem letzten Besuch verzeichneten unsere Server ungewöhnliche Aktivitäten. Aus diesem Grund wurden ihre Nachrichten erst einmal zurückgehalten.</p>
 
-  <hr class="no-line">
+        <p>Jetzt, da wir wissen, dass dies kein Angriff war, haben wir ihre Dokumente übermittelt. Bitte haben Sie noch etwas Geduld und schauen Sie in ein paar Tagen noch einmal rein.</p>
+      </div>
+    </div>
+  {% endif %}
 </div>
+
+<h1 class="headline">Informationen übermitteln</h1>
+
+<p class="explanation">Schicken Sie uns eine Nachricht, eine Datei oder beides.</p>
+<hr class="no-line">
 
 <form id="upload" method="post" action="/submit" enctype="multipart/form-data" autocomplete="off">
   <input name="csrf_token" type="hidden" value="{{ csrf_token() }}"/>
   <div class="snippet">
     <div class="attachment grid-item center">
-      <img class="center" src="{{ url_for('static', filename='i/font-awesome/upload-large-gray.png') }}">
+      <img class="center" src="{{ url_for('static', filename='i/server_upload.png') }}" width="73px" height="62px">
       <input type="file" name="fh" autocomplete="off">
       <p class="center" id="max-file-size">Maximale Dateigröße: 500 MB</p>
     </div>
     <div class="message grid-item">
-      <textarea name="msg" class="fill-parent" placeholder="Text eingeben"></textarea>
+      <textarea name="msg" class="fill-parent" placeholder="Text eingeben."></textarea>
     </div>
   </div>
 
   <hr class="no-line">
-
-  <button type="submit" class="btn primary" id="submit-doc-button">
-    <img class="icon off-hover" src="{{ url_for('static', filename='i/font-awesome/cloud-upload-white.png') }}" width="20px" />
-    <img class="icon on-hover" src="{{ url_for('static', filename='i/font-awesome/cloud-upload-blue.png') }}" width="20px" />
-    Abschicken
-  </button>
+  <div class="pull-right">
+    <a href="{{ url_for('lookup') }}" class="btn secondary" id="cancel">ABBRECHEN</a>
+    <button type="submit" class="sd-button btn primary" id="submit-doc-button">
+      <img class="icon off-hover" src="{{ url_for('static', filename='i/font-awesome/cloud-upload-white.png') }}" width="20px" height="14px" />
+      <img class="icon on-hover" src="{{ url_for('static', filename='i/font-awesome/cloud-upload-blue.png') }}" width="20px" height="14px" />
+      ABSCHICKEN
+    </button>
+  </div>
 </form>
 
 <hr class="no-line"/>
@@ -36,29 +51,50 @@
 
 <div id="replies">
   {% if replies %}
-    <p>Sie haben eine Antwort erhalten. Aus Sicherheitsgründen sollten Sie alle Antworten löschen, wenn Sie diese bearbeitet haben. So sehen wir außerdem, dass Sie die Antwort erhalten haben. Sie können antworten, in dem Sie oben eine Nachricht abschicken.</p>
+    <aside>
+      <p>Sie haben eine Antwort erhalten. Aus Sicherheitsgründen sollten Sie alle Antworten löschen, wenn Sie diese bearbeitet haben. So sehen wir außerdem, dass Sie die Antwort erhalten haben. Sie können antworten, in dem Sie oben eine weitere Nachricht abschicken.</p>
+    </aside>
     <hr class="no-line">
     {% for reply in replies %}
       <div class="reply">
         <time class="date" title="{{ reply.date|datetimeformat }}" datetime="{{ reply.date }}">{{ reply.date|datetimeformat(relative=True) }}</time>
-        <form class="message" method="post" action="/delete" autocomplete="off">
-          <input name="csrf_token" type="hidden" value="{{ csrf_token() }}"/>
-          <input type="hidden" name="reply_filename" value="{{ reply.filename }}" autocomplete="off"/>
-          <button type="submit"><img src="{{ url_for('static', filename='i/font-awesome/trash-black.png') }}" width="20px" height="20px"> Löschen</button>
+        <form id="delete" class="message" method="post" action="/delete" autocomplete="off">
+          <input name="csrf_token" type="hidden" value="{{ csrf_token() }}">
+          <input type="hidden" name="reply_filename" value="{{ reply.filename }}" autocomplete="off">
+          <a href="#confirm-delete-{{ reply.filename }}" class="delete">
+            <img id="delete-reply-{{ reply.filename }}" src="{{ url_for('static', filename='i/font-awesome/trash-black.png') }}" width="20px" height="20px">
+          </a>
+          <div id="confirm-delete-{{ reply.filename }}" class="confirm-prompt">
+            <p>Antwort löschen?
+              <a href="#delete">Abbrechen</a>
+              <button type="submit" class="sd-button btn danger" id="confirm-delete-reply-button-{{ reply.filename }}">LÖSCHEN</button>
+            </p>
+          </div>
         </form>
         <blockquote>{{ reply.decrypted | nl2br }}</blockquote>
         <div class="clearfix"></div>
       </div>
     {% endfor %}
+    <form id="delete-all" method="post" action="/delete-all">
+      <a class="sd-button btn" href="#delete-all-confirm">ALLE ANTWORTEN LÖSCHEN</a>
+      <input name="csrf_token" type="hidden" value="{{ csrf_token() }}"/>
+      <div id="delete-all-confirm" class="hidden-prompt">
+        <p><strong>Sind Sie mit den Antworten fertig?</strong></p>
+        <button class="sd-button danger" type="submit">JA, ALLE ANTWORTEN LÖSCHEN</button>
+        <a class="sd-button btn cancel" href="#delete-all">NEIN, NOCH NICHT</a>
+      </div>
+    </form>
   {% else %}
-    <p id="no-replies">Sie haben momentan keine Antworten.</p>
+    <p id="no-replies" class="explanation">Sie haben momentan keine Antworten.</p>
   {% endif %}
 </div>
 
 <hr class="no-line">
 
-<div class="code-reminder">
-  <img class="pull-left" src="{{ url_for('static', filename='i/font-awesome/lock-black.png') }}" width="20px" height="20px">Ihr Geheimcode ist: <strong>{{ codename }}</strong>
+<div class="code-reminder" id="codename-hint">
+  <img class="pull-left" src="{{ url_for('static', filename='i/font-awesome/lock-black.png') }}" width="17px" height="20px"> Ihr Geheimcode ist:
+  <div id="show" class="show pull-right"></div>
+  <span id="content" class="codename"><p class="alert">{{ codename }}</p></span>
 </div>
 
 {% endblock %}

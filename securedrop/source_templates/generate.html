@@ -1,20 +1,21 @@
 {% extends "base.html" %}
 
 {% block body %}
-<h2>Dies ist Ihr Geheimcode</h2>
+<h1>Hallo!</h1>
+<p class="explanation">Diesen Geheimcode benötigen Sie bei weiteren Besuchen des Tippgebers, um Antworten der Redaktion auf Ihre Nachricht lesen zu können.</p>
 
 <hr class="no-line" />
 
 <div class="code">
-  <img class="pull-left" src="{{ url_for('static', filename='i/font-awesome/lock-black.png') }}" width="20px" height="20px">
-  <p id="codename">{{ codename }}</p>
+  <img class="pull-left" src="{{ url_for('static', filename='i/font-awesome/lock-black.png') }}" width="20px" height="23px">
+  <p id="codename" class="codename">{{ codename }}</p>
   <div class="pull-right">
 
     <form id="regenerate-form" method="post">
       <input name="csrf_token" type="hidden" value="{{ csrf_token() }}">
       <button type="submit" id="regenerate-submit" class="small">
-        <img class="icon pull-left off-hover" src="{{ url_for('static', filename='i/font-awesome/refresh-white.png') }}" width="20px" />
-        <img class="icon pull-left on-hover" src="{{ url_for('static', filename='i/font-awesome/refresh-blue.png') }}"  width="20px" />
+        <img class="icon pull-left off-hover" src="{{ url_for('static', filename='i/font-awesome/refresh-white.png') }}" width="20px" height="20px" />
+        <img class="icon pull-left on-hover" src="{{ url_for('static', filename='i/font-awesome/refresh-blue.png') }}"  width="20px" height="20px" />
       </button>
     </form>
   </div>
@@ -22,23 +23,26 @@
 </div>
 
 <div class="clearfix"></div>
+
 <hr class="no-line">
 
-<p>Nachdem Sie etwas in den sicheren Briefkasten eingeworfen haben, können Sie auf diese Seite zurückkehren, um Antworten der Redaktion zu lesen und uns weitere Informationen zuzuspielen. <strong>Sie brauchen dann den Geheimcode, um sich anzumelden.</strong> Das ist der einzige Weg, auf dem wir Sie kontaktieren können.</p>
+<p class="explanation">Nachdem Sie etwas in den sicheren Briefkasten eingeworfen haben, können Sie auf diese Seite zurückkehren, um Antworten der Redaktion zu lesen und uns weitere Informationen zuzuspielen. <strong>Sie brauchen dann den Geheimcode, um sich anzumelden.</strong> Das ist der einzige Weg, auf dem wir Sie kontaktieren können.</p>
 
-<p class="serious">Am besten schützen Sie sich und ihren Geheimcode, in dem Sie ihn auswendig lernen. Falls Sie dies nicht können oder wollen, schreiben Sie sich den Geheimcode auf und verwahren ihn an einem sicheren Ort.</p>
+<hr class="no-line"/>
+<aside class="center">
+  <p>Am besten schützen Sie sich und ihren Geheimcode, in dem Sie ihn auswendig lernen. Falls Sie dies nicht können oder wollen, schreiben Sie sich den Geheimcode auf und verwahren ihn an einem sicheren Ort.</p>
+</aside>
 
-<hr class="no-line" />
-
+<div class="pull-right">
 <form id="create-form" method="post" action="/create" autocomplete="off">
   <input name="csrf_token" type="hidden" value="{{ csrf_token() }}">
 
-  <button type="submit" class="btn block pull-right" id="continue-button">
-    <img class="icon pull-left off-hover" src="{{ url_for('static', filename='i/font-awesome/fa-arrow-circle-o-right-white.png') }}" width="20px" />
-    <img class="icon pull-left on-hover" src="{{ url_for('static', filename='i/font-awesome/fa-arrow-circle-o-right-blue.png') }}" width="20px" />
-    Weiter
+  <a id="already-have-codename" href="/login" class="sd-button btn secondary">Sie haben bereits einen Geheimcode?</a>
+  <button type="submit" class="sd-button btn primary" id="continue-button">
+    <img class="icon off-hover" src="{{ url_for('static', filename='i/font-awesome/fa-arrow-circle-o-right-white.png') }}" width="17px" height="17px" />
+    <img class="icon on-hover" src="{{ url_for('static', filename='i/font-awesome/fa-arrow-circle-o-right-blue.png') }}" width="17px" height="17px" />
+     WEITER
   </button>
-
-  <a id="already-have-codename" href="/login">Sie haben bereits einen Geheimcode?</a>
 </form>
+</div>
 {% endblock %}
