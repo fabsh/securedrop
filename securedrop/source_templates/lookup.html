@@ -8,23 +8,18 @@
     <div class="flash notification">
       <img src="{{ url_for('static', filename='i/relieved_face.png')  }}" alt="relieved-face" class="icon">
       <div class="message">
-        <strong>Whew, it’s you! Now, the embarrassing part...</strong>
-        <p>Our servers experienced an unusual surge of new activity, when you last visited. This could
-          have been human activity, an automated attack, or just some random blip. To err on the side
-          of caution, we put a hold on sending all documents from that day through to our journalists.</p>
+        <strong>Bitte entschuldigen Sie die Unannehmlichkeiten...</strong></br>
+        <p>Bei Ihrem letzten Besuch verzeichneten unsere Server ungewöhnliche Aktivitäten. Aus diesem Grund wurden ihre Nachrichten erst einmal zurückgehalten.</p>
 
-        <p>Now that we know you’re really a human, though, we’ll get your previous submission into the
-          hands of a journalist straight away. We’re sorry for the delay. Please do check back again
-          in a week or so.</p>
+        <p>Jetzt, da wir wissen, dass dies kein Angriff war, haben wir ihre Dokumente übermittelt. Bitte haben Sie noch etwas Geduld und schauen Sie in ein paar Tagen noch einmal rein.</p>
       </div>
     </div>
   {% endif %}
 </div>
 
-<h1 class="headline">Submit Materials</h1>
-<p class="explanation">If you are already familiar with GPG, you can optionally encrypt your files and messages with our <a href="/journalist-key" class="text-link">public key</a> before submission. Files are encrypted as they are received by SecureDrop. <a href="/why-journalist-key" class="text-link">Learn more</a>.</p>
+<h1 class="headline">Informationen übermitteln</h1>
 
-<p class="explanation">You can send a file, a message, or both.</p>
+<p class="explanation">Schicken Sie uns eine Nachricht, eine Datei oder beides.</p>
 <hr class="no-line">
 
 <form id="upload" method="post" action="/submit" enctype="multipart/form-data" autocomplete="off">
@@ -33,34 +28,32 @@
     <div class="attachment grid-item center">
       <img class="center" src="{{ url_for('static', filename='i/server_upload.png') }}" width="73px" height="62px">
       <input type="file" name="fh" autocomplete="off">
-      <p class="center" id="max-file-size">Maximum upload size: 500 MB</p>
+      <p class="center" id="max-file-size">Maximale Dateigröße: 500 MB</p>
     </div>
     <div class="message grid-item">
-      <textarea name="msg" class="fill-parent" placeholder="Write a message."></textarea>
+      <textarea name="msg" class="fill-parent" placeholder="Text eingeben."></textarea>
     </div>
   </div>
 
   <hr class="no-line">
   <div class="pull-right">
-    <a href="{{ url_for('lookup') }}" class="btn secondary" id="cancel">CANCEL</a>
+    <a href="{{ url_for('lookup') }}" class="btn secondary" id="cancel">ABBRECHEN</a>
     <button type="submit" class="sd-button btn primary" id="submit-doc-button">
       <img class="icon off-hover" src="{{ url_for('static', filename='i/font-awesome/cloud-upload-white.png') }}" width="20px" height="14px">
       <img class="icon on-hover" src="{{ url_for('static', filename='i/font-awesome/cloud-upload-blue.png') }}" width="20px" height="14px">
-      SUBMIT
+      ABSCHICKEN
     </button>
   </div>
 </form>
 
 <hr class="no-line">
 
-<h2 class="headline">Get Replies</h2>
+<h2 class="headline">Antworten der Redaktion</h2>
 
 <div id="replies">
   {% if replies %}
     <aside>
-      <p>You have received a reply. To protect your identity in the unlikely event someone learns your codename,
-        please delete all replies when you're done with them. This also lets us know that you are aware of our reply.
-        You can respond by submitting a new message above.</p>
+      <p>Sie haben eine Antwort erhalten. Aus Sicherheitsgründen sollten Sie alle Antworten löschen, wenn Sie diese bearbeitet haben. So sehen wir außerdem, dass Sie die Antwort erhalten haben. Sie können antworten, in dem Sie oben eine weitere Nachricht abschicken.</p>
     </aside>
     <hr class="no-line">
     {% for reply in replies %}
@@ -73,7 +66,7 @@
             <img id="delete-reply-{{ reply.filename }}" src="{{ url_for('static', filename='i/font-awesome/trash-black.png') }}" width="20px" height="20px">
           </a>
           <div id="confirm-delete-{{ reply.filename }}" class="confirm-prompt">
-            <p>Delete this reply?
+            <p>Antwort löschen?
               <a href="#delete">Cancel</a>
               <button type="submit" class="sd-button btn danger" id="confirm-delete-reply-button-{{ reply.filename }}">DELETE</button>
             </p>
@@ -87,13 +80,13 @@
       <a class="sd-button btn" href="#delete-all-confirm">DELETE ALL REPLIES</a>
       <input name="csrf_token" type="hidden" value="{{ csrf_token() }}">
       <div id="delete-all-confirm" class="hidden-prompt">
-        <p><strong>Are you finished with the replies?</strong></p>
+        <p><strong>Sind Sie mit den Antworten fertig?</strong></p>
         <button class="sd-button danger" type="submit">YES, DELETE ALL REPLIES</button>
         <a class="sd-button btn cancel" href="#delete-all">NO, NOT YET</a>
       </div>
     </form>
   {% else %}
-    <p id="no-replies" class="explanation">There are no replies at this time.</p>
+  <p id="no-replies" class="explanation">Sie haben momentan keine Antworten.</p>
   {% endif %}
 </div>
 
